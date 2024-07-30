@@ -37,6 +37,22 @@ Contributions are welcome!
 
 Please refer to [contributing.md](contributing.md) for more information.
 
+## Reference
+
+If you're curious why the project is structured this way, look here!
+
+- `cmd/` contains the entry points for the application.
+    - `web/` contains the server side logic for the website (routing, handlers, etc.).
+- `internal/` contains things like validators, models, sending emails, etc.
+    - `vcs/` contains logic for figuring out what version of the site is running.
+- `ui/` contains everything relating to HTML templates and site assets (css, js, and images).
+    - `html/` contains all the templates for constructing the website.
+        - `pages/` contains full page templates.
+        - `partials/` contains partial templates for embedding into other templates.
+    - `static/` contains all the assets for the site.
+        - `css/` contains all the stylesheets for the site.
+        - `js/` contains all the scripts for the site.
+
 ## License
 
 This is released under the MIT license, which can be viewed [here](LICENSE).
