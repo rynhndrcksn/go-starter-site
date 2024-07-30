@@ -61,6 +61,22 @@ audit: vendor
 	@echo 'Running tests...'
 	go test -race -vet=off ./...
 
+## test: run all the tests
+.PHONY: test
+test: test/internal test/web
+
+## test/internal: run test in ./internal
+.PHONY: test/internal
+test/internal:
+	@echo 'Running tests in ./internal...'
+	@go test -race -vet=off ./internal/...
+
+## test/web: run test in ./cmd/web
+.PHONY: test/web
+test/web:
+	@echo 'Running tests in ./cmd/web...'
+	@go test -race -vet=off ./cmd/web/...
+
 ## vendor: tidy and vendor dependencies
 .PHONY: vendor
 vendor:
