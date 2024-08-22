@@ -1,6 +1,13 @@
 # Go Starter Site
 
-This repository is geared towards being a good leaping off point for building new sites using Go.
+This repository exists to act as a good starting point when developing a new website using Go.
+When I first started learning how to build websites with Go, I followed Alex Edward's advice in his book [Let's Go](https://lets-go.alexedwards.net).
+While the book is fantastic, and it's easy to recommend people read, I noticed that there's a lot of boilerplate that Go sites need.
+
+There are some solutions I found out there that people had done to remedy this problem themselves.
+However, I wasn't a big fan of them because they included a lot of extra stuff that not everyone needed or wanted (Templ, Tailwind, and/or React).
+Thus, I had the idea to make a useful, yet generic enough, Go site template that aims to have a lot of the boilerplate already done.
+This way, one can easily clone the repository, swap out the module name, and hit the ground running.
 
 ## Getting Started
 
@@ -21,6 +28,11 @@ Initialize your own git repository:
 ```shell
 git init
 ```
+
+Change the module name from `github.com/rynhndrcksn/go-starter-site` to match your repository.
+
+> [!NOTE]
+> Don't forget to update all the import paths throughout the project as well!
 
 Make the site your own!
 
