@@ -1,4 +1,4 @@
-module github.com/rynhndrcksn/portfolio
+module github.com/rynhndrcksn/go-starter-site
 
 go 1.22
 

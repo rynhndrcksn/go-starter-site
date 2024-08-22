@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/rynhndrcksn/portfolio/ui"
+	"github.com/rynhndrcksn/go-starter-site/ui"
 )
 
 // routes handles assigning all the routes for the site and what HTTP methods are used for them.

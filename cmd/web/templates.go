@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/rynhndrcksn/portfolio/ui"
+	"github.com/rynhndrcksn/go-starter-site/ui"
 )
 
 // functions contains a template.FuncMap that maps the above functions to functions that can then be called inside the templates.
