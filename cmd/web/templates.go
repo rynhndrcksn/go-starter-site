@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"html/template"
 	"io/fs"
 	"net/http"
@@ -10,6 +12,12 @@ import (
 	"github.com/rynhndrcksn/portfolio/ui"
 )
 
+// functions contains a template.FuncMap that maps the above functions to functions that can then be called inside the templates.
+var functions = template.FuncMap{
+	"humanDate": humanDate,
+	"props":     props,
+}
+
 // humanDate returns a nicely formatted string representation of a time.Time object.
 func humanDate(t time.Time) string {
 	if t.IsZero() {
@@ -18,9 +26,22 @@ func humanDate(t time.Time) string {
 	return t.UTC().Format("02 Jan 2006 at 15:04")
 }
 
-// functions contains a template.FuncMap that maps the above functions to functions that can then be called inside the templates.
-var functions = template.FuncMap{
-	"humanDate": humanDate,
+// props takes any number of key/value pairs and passes them into a child template.
+func props(pairs ...any) (map[string]any, error) {
+	if len(pairs)%2 != 0 {
+		return nil, errors.New("mismatched amount of key/value pairs")
+	}
+
+	m := make(map[string]any, len(pairs)/2)
+	for i := 0; i < len(pairs); i += 2 {
+		key, ok := pairs[i].(string)
+
+		if !ok {
+			return nil, fmt.Errorf("cannot use type %T as map key", pairs[i])
+		}
+		m[key] = pairs[i+1]
+	}
+	return m, nil
 }
 
 // templateData holds dynamic data that can be passed to the HTML templates.
@@ -59,6 +80,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		patterns := []string{
 			"html/base.tmpl",
 			"html/partials/*.tmpl",
+			"html/components/*.tmpl",
 			page,
 		}
 

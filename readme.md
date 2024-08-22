@@ -47,6 +47,7 @@ If you're curious why the project is structured this way, look here!
     - `vcs/` contains logic for figuring out what version of the site is running.
 - `ui/` contains everything relating to HTML templates and site assets (css, js, and images).
     - `html/` contains all the templates for constructing the website.
+        - `components/` contains components to embed into partials and/or pages.
         - `pages/` contains full page templates.
         - `partials/` contains partial templates for embedding into other templates.
     - `static/` contains all the assets for the site.
