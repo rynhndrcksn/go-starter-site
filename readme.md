@@ -1,4 +1,4 @@
-# Go Starter Site
+# Go Starter Site - [![Go Report Card](https://goreportcard.com/badge/github.com/rynhndrcksn/go-starter-site)](https://goreportcard.com/report/github.com/rynhndrcksn/go-starter-site)
 
 This repository exists to act as a good starting point when developing a new website using Go.
 When I first started learning how to build websites with Go, I followed Alex Edward's advice in his book [Let's Go](https://lets-go.alexedwards.net).
