@@ -11,30 +11,12 @@ This way, one can easily clone the repository, swap out the module name, and hit
 
 ## Getting Started
 
-Clone this repository:
-
-```shell
-git clone https://github.com/rynhndrcksn/go-starter-site .
-```
-
-Remove the existing `.git/` directory:
-
-```shell
-rm -rf .git/
-```
-
-Initialize your own git repository:
-
-```shell
-git init
-```
+While on desktop, click the "Use this template" button located near the top right of the page and follow the steps provided.
 
 Change the module name from `github.com/rynhndrcksn/go-starter-site` to match your repository.
 
 > [!NOTE]
 > Don't forget to update all the import paths throughout the project as well!
-
-Make the site your own!
 
 ## Dependencies
 
