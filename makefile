@@ -24,10 +24,10 @@ confirm:
 # DEVELOPMENT
 # ==================================================================================== #
 
-## run/web: run the cmd/web application
-.PHONY: run/web
-run/web:
-	@go run ./cmd/web
+## dev/web: run the cmd/web application using 'air' for live reload
+.PHONY: dev/web
+dev/web:
+	@air
 
 ## db/psql: connect to the database using psql
 .PHONY: db/psql
@@ -45,6 +45,11 @@ db/migrations/new:
 db/migrations/up: confirm
 	@echo 'Running up migrations...'
 	migrate -path ./migrations -database ${DB_CONN} up
+
+## run/web: run the cmd/web application
+.PHONY: run/web
+run/web:
+	@go run ./cmd/web
 
 # ==================================================================================== #
 # QUALITY CONTROL
