@@ -89,6 +89,10 @@ button + button, .button + .button, input[type=submit] + input[type=submit] {
     margin-left: 1em;
 }
 
+main {
+    flex: 1;
+}
+
 .bordered {
     border: 3px solid;
 }
@@ -98,10 +102,6 @@ button + button, .button + .button, input[type=submit] + input[type=submit] {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-}
-
-.content {
-    flex: 1;
 }
 
 .home {
