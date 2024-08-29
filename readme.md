@@ -25,9 +25,11 @@ In an effort to keep third party dependencies to a minimum, only the following o
 1. https://github.com/alexedwards/scs | Session management
 2. https://github.com/julienschmidt/httprouter | Http router
 
-There are some development related dependencies that I highly recommend installing for a quality of life improvement:
+There are some development related dependencies that I recommend installing to your local machine:
 
 1. https://github.com/air-verse/air | Live reloading of Go binary (`make dev/web` makes use of this)
+2. https://staticcheck.dev | Linter for Go (`make audit and tidy` make use of this).
+   1. This can be installed by running `go install honnef.co/go/tools/cmd/staticcheck@latest` (as of August 2024).
 
 ## Contributing
 
