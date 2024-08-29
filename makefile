@@ -24,27 +24,28 @@ confirm:
 # DEVELOPMENT
 # ==================================================================================== #
 
-## dev/web: run the cmd/web application using 'air' for live reload
-.PHONY: dev/web
-dev/web:
-	@air
-
 ## db/psql: connect to the database using psql
 .PHONY: db/psql
 db/psql:
 	psql ${DB_CONN}
 
-## db/migrations/new name=$1: create a new database migration
-.PHONY: db/migrations/new
-db/migrations/new:
+## db/mig/new name=$1: create a new database migration
+.PHONY: db/mig/new
+db/mig/new:
 	@echo 'Creating migration files for ${name}...'
 	migrate create -seq -ext=.sql -dir=./migrations ${name}
 
-## db/migrations/up: apply all up database migrations
-.PHONY: db/migrations/up
-db/migrations/up: confirm
+# note: the $DB_CONN string is being sourced from the .envrc file.
+## db/mig/up: apply all up database migrations
+.PHONY: db/mig/up
+db/mig/up: confirm
 	@echo 'Running up migrations...'
 	migrate -path ./migrations -database ${DB_CONN} up
+
+## dev/web: run the cmd/web application using 'air' for live reload
+.PHONY: dev/web
+dev/web:
+	@air
 
 ## run/web: run the cmd/web application
 .PHONY: run/web
@@ -55,24 +56,27 @@ run/web:
 # QUALITY CONTROL
 # ==================================================================================== #
 
-## audit: tidy dependencies and format, vet, and test all code
+## audit: run quality control checks
 .PHONY: audit
-audit: vendor
-	@echo 'Formatting code...'
-	go fmt ./...
+audit:
+	@echo 'Checking module dependencies'
+	@#go mod tidy -diff | only applicable in Go 1.23 and later
+	go mod verify
 	@echo 'Vetting code...'
 	go vet ./...
 	staticcheck ./...
 	@echo 'Running tests...'
 	go test -race -vet=off ./...
 
-## vendor: tidy and vendor dependencies
-.PHONY: vendor
-vendor:
-	@echo 'Tidying and verifying module dependencies...'
+## tidy: format all .go files and tidy module dependencies
+.PHONY: tidy
+tidy:
+	@echo 'Formatting .go files...'
+	go fmt ./...
+	@echo 'Tidying module dependencies...'
 	go mod tidy
+	@echo 'Verifying and vendoring module dependencies...'
 	go mod verify
-	@echo 'Vendoring dependencies...'
 	go mod vendor
 
 # ==================================================================================== #
