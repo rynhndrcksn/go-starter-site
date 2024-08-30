@@ -47,6 +47,12 @@ db/mig/up: confirm
 dev/web:
 	@air
 
+## run/docker/web: run the dockerized cmd/web application
+.PHONY: run/docker/web
+run/docker/web: build/web
+	@echo 'Starting docker container for cmd/web...'
+	podman run -p 4000:4000 --rm localhost/${APP_DOCKER_NAME}:latest
+
 ## run/web: run the cmd/web application
 .PHONY: run/web
 run/web:
@@ -83,9 +89,15 @@ tidy:
 # BUILD
 # ==================================================================================== #
 
+## build/docker/web: build the cmd/web application in a podman/docker container
+.PHONY: build/docker/web
+build/docker/web: build/web
+	@echo 'Building docker container for cmd/web...'
+	podman build -t ${APP_DOCKER_NAME} .
+
 ## build/web: build the cmd/web application
 .PHONY: build/web
 build/web:
 	@echo 'Building cmd/web...'
-	go build -ldflags='-s' -o=./bin/host_web ./cmd/web
-	GOOS=linux GOARCH=amd64 go build -ldflags='-s' -o=./bin/linux_amd64_web ./cmd/web
+	CGO_ENABLED=0 go build -ldflags='-s' -o=./bin/host_web ./cmd/web
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags='-s' -o=./bin/linux_amd64_web ./cmd/web
