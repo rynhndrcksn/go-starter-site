@@ -11,7 +11,7 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/alexedwards/scs/v2/memstore"
-	"github.com/rynhndrcksn/portfolio/internal/vcs"
+	"github.com/rynhndrcksn/go-starter-site/internal/vcs"
 )
 
 // config contains all the project configuration.
