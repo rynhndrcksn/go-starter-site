@@ -12,6 +12,11 @@ import (
 	"github.com/rynhndrcksn/go-starter-site/ui"
 )
 
+var (
+	propsKeyValueCountMismatchedError = errors.New("mismatched amount of key/value pairs")
+	propsPairsCountIsZeroError        = errors.New("length of 'pairs' must be greater than 0")
+)
+
 // functions contains a template.FuncMap that maps the above functions to functions that can then be called inside the templates.
 var functions = template.FuncMap{
 	"humanDate": humanDate,
@@ -28,8 +33,12 @@ func humanDate(t time.Time) string {
 
 // props takes any number of key/value pairs and passes them into a child template.
 func props(pairs ...any) (map[string]any, error) {
+	if len(pairs) == 0 {
+		return nil, propsPairsCountIsZeroError
+	}
+
 	if len(pairs)%2 != 0 {
-		return nil, errors.New("mismatched amount of key/value pairs")
+		return nil, propsKeyValueCountMismatchedError
 	}
 
 	m := make(map[string]any, len(pairs)/2)

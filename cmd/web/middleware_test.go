@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rynhndrcksn/portfolio/internal/assert"
+	"github.com/rynhndrcksn/go-starter-site/internal/assert"
 )
 
 func TestCommonHeaders(t *testing.T) {
