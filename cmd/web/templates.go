@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	propsKeyValueCountMismatchedError = errors.New("mismatched amount of key/value pairs")
-	propsPairsCountIsZeroError        = errors.New("length of 'pairs' must be greater than 0")
+	errPropsKeyValueCountMismatch = errors.New("mismatched amount of key/value pairs")
+	errPropsKeyValueCountIsZero   = errors.New("length of 'pairs' must be greater than 0")
 )
 
 // functions contains a template.FuncMap that maps the above functions to functions that can then be called inside the templates.
@@ -34,11 +34,11 @@ func humanDate(t time.Time) string {
 // props takes any number of key/value pairs and passes them into a child template.
 func props(pairs ...any) (map[string]any, error) {
 	if len(pairs) == 0 {
-		return nil, propsPairsCountIsZeroError
+		return nil, errPropsKeyValueCountIsZero
 	}
 
 	if len(pairs)%2 != 0 {
-		return nil, propsKeyValueCountMismatchedError
+		return nil, errPropsKeyValueCountMismatch
 	}
 
 	m := make(map[string]any, len(pairs)/2)

@@ -53,13 +53,13 @@ func TestProps(t *testing.T) {
 			name:    "Passed in 0 items",
 			input:   []any{},
 			wantMap: nil,
-			wantErr: propsPairsCountIsZeroError,
+			wantErr: errPropsKeyValueCountIsZero,
 		},
 		{
 			name:    "Mismatched key value pairs",
 			input:   []any{"key1", "value1", "key2"},
 			wantMap: nil,
-			wantErr: propsKeyValueCountMismatchedError,
+			wantErr: errPropsKeyValueCountMismatch,
 		},
 		{
 			name:    "Valid amount of key value pairs",
