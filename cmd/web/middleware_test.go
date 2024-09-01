@@ -21,7 +21,7 @@ func TestCommonHeaders(t *testing.T) {
 
 	// Create a mock HTTP handler that we can pass to our commonHeaders middleware, which writes a 200 status code and an "OK" response body.
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("OK"))
+		_, _ = w.Write([]byte("OK"))
 	})
 
 	// Initialize a new test application.
@@ -68,4 +68,33 @@ func TestCommonHeaders(t *testing.T) {
 	body = bytes.TrimSpace(body)
 
 	assert.Equal(t, string(body), "OK")
+}
+
+func TestRecoverPanic(t *testing.T) {
+	// Initialize a new httptest.ResponseRecorder and fake http.Request.
+	rr := httptest.NewRecorder()
+
+	r, err := http.NewRequest(http.MethodGet, "/", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a mock HTTP handler that we can pass to our recoverPanic middleware, which panics.
+	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		panic("this is a panic")
+	})
+
+	// Initialize a new test application.
+	app := newTestApplication(t)
+
+	// Pass the mock HTTP handler to the recoverPanic middleware.
+	// Note: we need to wrap the recoverPanic middleware inside a call
+	// to "app.sessionManager.LoadAndSave()", otherwise scs panics.
+	app.sessionManager.LoadAndSave(app.recoverPanic(next)).ServeHTTP(rr, r)
+
+	// Call the Result() method on the http.ResponseRecorder to get the results of the test.
+	rs := rr.Result()
+
+	// Check that the middleware worked and the response is what's wanted.
+	assert.Equal(t, rs.Header.Get("Connection"), "close")
 }
