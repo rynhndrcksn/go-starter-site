@@ -1,0 +1,33 @@
+name: "CI"
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: [ '1.22.x', '1.23.x' ]
+
+    steps:
+      - name: "Checking out code..."
+        uses: actions/checkout@v4
+      - name: "Installing Go..."
+        uses: WillAbides/setup-go-faster@v1
+        with:
+          go-version: ${{ matrix.go }}
+      - name: "Install dependencies..."
+        run: go mod download
+      - name: "Verifying dependencies..."
+        run: go mod verify
+      - name: "Vetting code..."
+        run: go vet ./...
+      - uses: dominikh/staticcheck-action@v1
+        with:
+          version: "latest"
+          install-go: false
+          cache-key: ${{ matrix.go }}
+      - name: "Running tests..."
+        run: go test -race -vet=off ./...

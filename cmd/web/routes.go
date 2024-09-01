@@ -27,3 +27,15 @@ func (app *application) routes() http.Handler {
 
 	return app.recoverPanic(app.logRequest(app.commonHeaders(router)))
 }
+
+func (app *application) routeThatPanics() http.Handler {
+	// Initialize new httprouter instance.
+	router := httprouter.New()
+
+	// Register route to test against:
+	router.HandlerFunc(http.MethodGet, "/server-error", func(writer http.ResponseWriter, r *http.Request) {
+		panic("this triggers a 500 status page")
+	})
+
+	return app.recoverPanic(router)
+}
