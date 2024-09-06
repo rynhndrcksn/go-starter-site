@@ -22,8 +22,10 @@ Change the module name from `github.com/rynhndrcksn/go-starter-site` to match yo
 
 In an effort to keep third party dependencies to a minimum, only the following ones have been added:
 
-1. https://github.com/alexedwards/scs | Session management
-2. https://github.com/julienschmidt/httprouter | Http router
+1. https://github.com/alexedwards/scs/pgxstore | Store sessions in Postgres
+2. https://github.com/alexedwards/scs | Session management
+3. https://github.com/jackc/pgx | PostgreSQL driver
+4. https://github.com/julienschmidt/httprouter | Http router
 
 There are some development related dependencies that I recommend installing to your local machine:
 
@@ -44,7 +46,9 @@ If you're curious why the project is structured this way, look here!
 - `cmd/` contains the entry points for the application.
     - `web/` contains the server side logic for the website (routing, handlers, etc.).
 - `internal/` contains things like validators, models, sending emails, etc.
+    - `data/` contains models, storing/retrieving things from a database, etc.
     - `vcs/` contains logic for figuring out what version of the site is running.
+- `migrations/` contains all the migration files for the site.
 - `ui/` contains everything relating to HTML templates and site assets (css, js, and images).
     - `html/` contains all the templates for constructing the website.
         - `components/` contains components to embed into partials and/or pages.

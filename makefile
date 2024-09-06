@@ -27,20 +27,31 @@ confirm:
 ## db/psql: connect to the database using psql
 .PHONY: db/psql
 db/psql:
-	psql ${DB_CONN}
+	@psql ${DB_CONN}
 
-## db/mig/new name=$1: create a new database migration
-.PHONY: db/mig/new
-db/mig/new:
+## db/mig/create name=$1: create a new database migration
+.PHONY: db/mig/create
+db/mig/create:
 	@echo 'Creating migration files for ${name}...'
-	migrate create -seq -ext=.sql -dir=./migrations ${name}
+	@goose -dir=./migrations postgres ${DB_CONN} create ${name} sql
 
-# note: the $DB_CONN string is being sourced from the .envrc file.
+## db/mig/down: apply all up database migrations
+.PHONY: db/mig/down
+db/mig/down: confirm
+	@echo 'Rolling back last migration...'
+	@goose -dir=./migrations postgres ${DB_CONN} down
+
+## db/mig/status: see migration status for current database
+.PHONY: db/mig/status
+db/mig/status:
+	@echo 'Getting migration status for database...'
+	@goose -dir=./migrations postgres ${DB_CONN} status
+
 ## db/mig/up: apply all up database migrations
 .PHONY: db/mig/up
 db/mig/up: confirm
 	@echo 'Running up migrations...'
-	migrate -path ./migrations -database ${DB_CONN} up
+	@goose -dir=./migrations postgres ${DB_CONN} up
 
 ## dev/web: run the cmd/web application using 'air' for live reload
 .PHONY: dev/web
@@ -49,14 +60,15 @@ dev/web:
 
 ## run/docker/web: run the dockerized cmd/web application
 .PHONY: run/docker/web
-run/docker/web: build/web
+run/docker/web: build/docker/web
 	@echo 'Starting docker container for cmd/web...'
 	podman run -p 4000:4000 --rm localhost/${APP_DOCKER_NAME}:latest
 
-## run/web: run the cmd/web application
+## run/web: run the cmd/web application (fallback if 'air' isn't installed)
 .PHONY: run/web
 run/web:
-	@go run ./cmd/web
+	@go run ./cmd/web \
+		-dsn=${DB_CONN}
 
 # ==================================================================================== #
 # QUALITY CONTROL
