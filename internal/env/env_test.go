@@ -16,7 +16,7 @@ func TestGetBoolOrDefault(t *testing.T) {
 		want      bool
 	}{
 		{
-			name:      "gets the bool value from the environment",
+			name:      "gets the correct value from the environment",
 			valExists: true,
 			want:      true,
 		},
@@ -67,7 +67,7 @@ func TestGetDurationOrDefault(t *testing.T) {
 		want      time.Duration
 	}{
 		{
-			name:      "gets the time value from the environment",
+			name:      "gets the correct value from the environment",
 			valExists: true,
 			want:      time.Second,
 		},
@@ -118,7 +118,7 @@ func TestGetIntOrDefault(t *testing.T) {
 		want      int
 	}{
 		{
-			name:      "gets the time value from the environment",
+			name:      "gets the correct value from the environment",
 			valExists: true,
 			want:      10,
 		},
@@ -150,6 +150,46 @@ func TestGetIntOrDefault(t *testing.T) {
 			}
 
 			got := GetIntOrDefault("val", tt.want)
+			assert.Equal(t, got, tt.want)
+
+			if tt.valExists {
+				err := os.Unsetenv("val")
+				if err != nil {
+					t.Fatal(err.Error())
+				}
+			}
+		})
+	}
+}
+
+func TestGetStringOrDefault(t *testing.T) {
+	tests := []struct {
+		name      string
+		valExists bool
+		want      string
+	}{
+		{
+			name:      "gets the correct value from the environment",
+			valExists: true,
+			want:      "a string",
+		},
+		{
+			name:      "gets the default value if environment variable isn't set",
+			valExists: false,
+			want:      "another string",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.valExists {
+				err := os.Setenv("val", tt.want)
+				if err != nil {
+					t.Fatal(err.Error())
+				}
+
+			}
+
+			got := GetStringOrDefault("val", tt.want)
 			assert.Equal(t, got, tt.want)
 
 			if tt.valExists {
