@@ -4,6 +4,7 @@ import (
 	"os"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/rynhndrcksn/go-starter-site/internal/assert"
 )
@@ -13,25 +14,21 @@ func TestGetBoolOrDefault(t *testing.T) {
 		name      string
 		valExists bool
 		want      bool
-		defaultV  bool
 	}{
 		{
 			name:      "gets the bool value from the environment",
 			valExists: true,
 			want:      true,
-			defaultV:  true,
 		},
 		{
 			name:      "gets the default value if environment variable isn't set",
 			valExists: false,
 			want:      false,
-			defaultV:  false,
 		},
 		{
-			name:      "gets the default value if it isn't a bool",
+			name:      "gets the default value if environment variable isn't valid",
 			valExists: true,
 			want:      false,
-			defaultV:  false,
 		},
 	}
 	for _, tt := range tests {
@@ -50,7 +47,58 @@ func TestGetBoolOrDefault(t *testing.T) {
 				}
 			}
 
-			got := GetBoolOrDefault("val", tt.defaultV)
+			got := GetBoolOrDefault("val", tt.want)
+			assert.Equal(t, got, tt.want)
+
+			if tt.valExists {
+				err := os.Unsetenv("val")
+				if err != nil {
+					t.Fatal(err.Error())
+				}
+			}
+		})
+	}
+}
+
+func TestGetDurationOrDefault(t *testing.T) {
+	tests := []struct {
+		name      string
+		valExists bool
+		want      time.Duration
+	}{
+		{
+			name:      "gets the time value from the environment",
+			valExists: true,
+			want:      time.Second,
+		},
+		{
+			name:      "gets the default value if environment variable isn't set",
+			valExists: false,
+			want:      time.Millisecond,
+		},
+		{
+			name:      "gets the default value if environment variable isn't valid",
+			valExists: true,
+			want:      time.Millisecond,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.valExists {
+				if tt.want == time.Second {
+					err := os.Setenv("val", "1s")
+					if err != nil {
+						t.Fatal(err.Error())
+					}
+				} else {
+					err := os.Setenv("val", "not a time.Duration")
+					if err != nil {
+						t.Fatal(err.Error())
+					}
+				}
+			}
+
+			got := GetDurationOrDefault("val", tt.want)
 			assert.Equal(t, got, tt.want)
 
 			if tt.valExists {
