@@ -14,6 +14,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rynhndrcksn/go-starter-site/internal/data"
+	"github.com/rynhndrcksn/go-starter-site/internal/env"
 	"github.com/rynhndrcksn/go-starter-site/internal/vcs"
 )
 
@@ -37,10 +38,10 @@ type application struct {
 
 func main() {
 	var conf config
-	flag.IntVar(&conf.port, "port", 4000, "Web server port")
-	flag.StringVar(&conf.env, "env", "development", "Environment (development|staging|production)")
-	flag.StringVar(&conf.dsn, "dsn", os.Getenv("DB_CONN"), "Database DSN")
-	debug := flag.Bool("debug", false, "Enable debug mode")
+	flag.IntVar(&conf.port, "port", env.GetIntOrDefault("PORT", 4000), "Web server port")
+	flag.StringVar(&conf.env, "env", env.GetStringOrDefault("ENV", "development"), "Environment (development|staging|production)")
+	flag.StringVar(&conf.dsn, "dsn", env.GetStringOrDefault("DB_CONN", ""), "Database DSN")
+	debug := flag.Bool("debug", env.GetBoolOrDefault("DEBUG", false), "Enable debug mode")
 	displayVersion := flag.Bool("version", false, "Display version and exit")
 	flag.Parse()
 
