@@ -110,3 +110,54 @@ func TestGetDurationOrDefault(t *testing.T) {
 		})
 	}
 }
+
+func TestGetIntOrDefault(t *testing.T) {
+	tests := []struct {
+		name      string
+		valExists bool
+		want      int
+	}{
+		{
+			name:      "gets the time value from the environment",
+			valExists: true,
+			want:      10,
+		},
+		{
+			name:      "gets the default value if environment variable isn't set",
+			valExists: false,
+			want:      1,
+		},
+		{
+			name:      "gets the default value if environment variable isn't valid",
+			valExists: true,
+			want:      1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.valExists {
+				if tt.want == 10 {
+					err := os.Setenv("val", strconv.FormatInt(int64(tt.want), 10))
+					if err != nil {
+						t.Fatal(err.Error())
+					}
+				} else {
+					err := os.Setenv("val", "not an int")
+					if err != nil {
+						t.Fatal(err.Error())
+					}
+				}
+			}
+
+			got := GetIntOrDefault("val", tt.want)
+			assert.Equal(t, got, tt.want)
+
+			if tt.valExists {
+				err := os.Unsetenv("val")
+				if err != nil {
+					t.Fatal(err.Error())
+				}
+			}
+		})
+	}
+}
