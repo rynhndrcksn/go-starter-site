@@ -21,7 +21,7 @@ confirm:
 	@echo -n 'Are you sure? [y/N] ' && read ans && [ $${ans:-N} = y ]
 
 # ==================================================================================== #
-# DEVELOPMENT
+# DATABASE
 # ==================================================================================== #
 
 ## db/psql: connect to the database using psql
@@ -52,23 +52,6 @@ db/mig/status:
 db/mig/up: confirm
 	@echo 'Running up migrations...'
 	@goose -dir=./migrations postgres ${DB_CONN} up
-
-## dev/web: run the cmd/web application using 'air' for live reload
-.PHONY: dev/web
-dev/web:
-	@air
-
-## run/docker/web: run the dockerized cmd/web application
-.PHONY: run/docker/web
-run/docker/web: build/docker/web
-	@echo 'Starting docker container for cmd/web...'
-	podman run -p 4000:4000 --rm localhost/${APP_DOCKER_NAME}:latest
-
-## run/web: run the cmd/web application (fallback if 'air' isn't installed)
-.PHONY: run/web
-run/web:
-	@go run ./cmd/web \
-		-dsn=${DB_CONN}
 
 # ==================================================================================== #
 # QUALITY CONTROL
@@ -114,18 +97,39 @@ test/web:
 	@go test -race -vet=off ./cmd/web/...
 
 # ==================================================================================== #
-# BUILD
+# DOCKER
 # ==================================================================================== #
 
-## build/docker/web: build the cmd/web application in a podman/docker container
-.PHONY: build/docker/web
-build/docker/web: build/web
+## docker/build/web: build the cmd/web application in a docker container
+.PHONY: docker/build/web
+docker/build/web:
 	@echo 'Building docker container for cmd/web...'
-	podman build -t ${APP_DOCKER_NAME} .
+	sudo docker build --no-cache -t ${APP_DOCKER_NAME} . && sudo docker image prune -f
 
-## build/web: build the cmd/web application
-.PHONY: build/web
-build/web:
+## docker/run/web: run the dockerized cmd/web application
+.PHONY: docker/run/web
+docker/run/web: docker/build/web
+	@echo 'Starting docker container for cmd/web...'
+	sudo docker run -p 4000:4000 --network="host" --env-file=".envrc" ${APP_DOCKER_NAME}
+
+# ==================================================================================== #
+# WEB
+# ==================================================================================== #
+
+## web/build: build the cmd/web application
+.PHONY: web/build
+web/build:
 	@echo 'Building cmd/web...'
 	CGO_ENABLED=0 go build -ldflags='-s' -o=./bin/host_web ./cmd/web
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags='-s' -o=./bin/linux_amd64_web ./cmd/web
+
+## web/dev: run the cmd/web application using 'air' for live reload
+.PHONY: web/dev
+web/dev:
+	@air
+
+## web/run: run the cmd/web application (fallback if 'air' isn't installed)
+.PHONY: web/run
+web/run:
+	@go run ./cmd/web \
+		-dsn=${DB_CONN}
