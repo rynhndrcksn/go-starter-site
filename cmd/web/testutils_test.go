@@ -12,6 +12,7 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/alexedwards/scs/v2/memstore"
+	"github.com/julienschmidt/httprouter"
 )
 
 // newTestApplication creates a new application struct containing mocked dependencies.
@@ -89,4 +90,16 @@ func (ts *testServer) get(t *testing.T, urlPath string) (int, http.Header, strin
 	body = bytes.TrimSpace(body)
 
 	return rs.StatusCode, rs.Header, string(body)
+}
+
+func (app *application) routeThatPanics() http.Handler {
+	// Initialize new httprouter instance.
+	router := httprouter.New()
+
+	// Register route to test against:
+	router.HandlerFunc(http.MethodGet, "/server-error", func(writer http.ResponseWriter, r *http.Request) {
+		panic("this triggers a 500 status page")
+	})
+
+	return app.recoverPanic(router)
 }

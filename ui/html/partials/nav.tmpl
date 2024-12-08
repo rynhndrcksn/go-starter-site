@@ -1,8 +1,6 @@
 {{define "nav"}}
     <nav>
-        <div>
-            {{template "nav-link" (props "Link" "/" "Text" "Home")}}
-            {{template "nav-link" (props "Link" "/about" "Text" "About")}}
-        </div>
+        {{template "nav-link" (props "Link" "/" "Text" "Home" "Classes" "home")}}
+        {{template "nav-link" (props "Link" "/about" "Text" "About" "Classes" "")}}
     </nav>
 {{end}}
