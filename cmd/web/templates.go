@@ -7,8 +7,10 @@ import (
 	"io/fs"
 	"net/http"
 	"path/filepath"
+	"strings"
 	"time"
 
+	"github.com/rynhndrcksn/go-starter-site/internal/env"
 	"github.com/rynhndrcksn/go-starter-site/ui"
 )
 
@@ -55,15 +57,23 @@ func props(pairs ...any) (map[string]any, error) {
 
 // templateData holds dynamic data that can be passed to the HTML templates.
 type templateData struct {
-	CurrentYear int
-	Flash       string
+	CanonicalUrl string
+	CurrentYear  int
+	Description  string
+	Flash        string
+	ImageUrl     string
+	PageType     string
+	SiteName     string
+	Title        string
 }
 
 // newTemplateData initializes a new templateData struct and returns it.
 func (app *application) newTemplateData(r *http.Request) templateData {
 	return templateData{
-		CurrentYear: time.Now().Year(),
-		Flash:       app.sessionManager.PopString(r.Context(), "flash"),
+		CanonicalUrl: getCanonicalURL(r),
+		CurrentYear:  time.Now().Year(),
+		Flash:        app.sessionManager.PopString(r.Context(), "flash"),
+		SiteName:     env.GetStringOrDefault("SITE_NAME", "Site"),
 	}
 }
 
@@ -105,4 +115,19 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	}
 
 	return cache, nil
+}
+
+// getCanonicalURL creates the canonical URL and returns it.
+func getCanonicalURL(r *http.Request) string {
+	// Get the full URL from the request
+	scheme := "https"
+
+	// Remove www if present and clean the host
+	host := r.Host
+	host = strings.TrimPrefix(host, "www.")
+
+	// Build the canonical URL without query parameters
+	canonicalURL := scheme + "://" + host + r.URL.Path
+
+	return canonicalURL
 }
