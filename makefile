@@ -61,24 +61,31 @@ db/mig/up: confirm
 .PHONY: audit
 audit:
 	@echo 'Checking module dependencies'
-	@#go mod tidy -diff | only applicable in Go 1.23 and later
-	go mod verify
+	@go mod tidy -diff
+	@go mod verify
 	@echo 'Vetting code...'
-	go vet ./...
-	staticcheck ./...
+	@go vet ./...
+	@staticcheck ./...
 	@echo 'Running tests...'
-	go test -race -vet=off ./...
+	@go test -race -vet=off ./...
 
 ## tidy: format all .go files and tidy module dependencies
 .PHONY: tidy
 tidy:
 	@echo 'Formatting .go files...'
-	go fmt ./...
+	@go fmt ./...
 	@echo 'Tidying module dependencies...'
-	go mod tidy
+	@go mod tidy
 	@echo 'Verifying and vendoring module dependencies...'
-	go mod verify
-	go mod vendor
+	@go mod verify
+	@go mod vendor
+
+## up: update all dependencies in go.mod and runs make tidy afterwards
+.PHONY: up
+up:
+	@echo 'Updating dependencies...'
+	@go get -u ./...
+	$(MAKE) tidy
 
 ## test: run all the tests
 .PHONY: test
