@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"html/template"
@@ -15,14 +17,43 @@ import (
 )
 
 var (
+	errHashAssetPathIsEmpty       = errors.New("cannot pass an empty path in")
+	errHashAssetCantReadFile      = errors.New("error trying to read original file with fs.ReadFile()")
 	errPropsKeyValueCountMismatch = errors.New("mismatched amount of key/value pairs")
 	errPropsKeyValueCountIsZero   = errors.New("length of 'pairs' must be greater than 0")
 )
 
 // functions contains a template.FuncMap that maps the above functions to functions that can then be called inside the templates.
 var functions = template.FuncMap{
-	"humanDate": humanDate,
-	"props":     props,
+	"hashAssetPath": hashAssetPath,
+	"humanDate":     humanDate,
+	"props":         props,
+}
+
+// hashAssetPath takes an asset path, computes the has for the asset, appends it to the asset name, and returns it.
+// This acts as a way to enable caching the assets long term, but if they change, the cache can be bypassed.
+// The path passed in must start with a "/", and is expected to be used in a similar setup to this project.
+// This works by appending a ?v=<hash> to the end of the file, so it isn't incredibly robust for advanced needs.
+// This is heavily inspired by https://github.com/c9845/hashfs
+func hashAssetPath(originalPath string) (string, error) {
+	if len(strings.TrimSpace(originalPath)) == 0 {
+		return "", errHashAssetPathIsEmpty
+	}
+
+	// Strip off the first "/", so the following fs.ReadFile line succeeds.
+	contents, err := fs.ReadFile(ui.Files, originalPath[1:])
+	if err != nil {
+		return originalPath, errHashAssetCantReadFile
+	}
+
+	// Get the file hash and encode it to a string.
+	hash := md5.Sum(contents)
+	encodedHash := hex.EncodeToString(hash[:])
+
+	// Add hash to filename.
+	hashedFilename := fmt.Sprintf("%s?v=%s", originalPath, encodedHash)
+
+	return hashedFilename, nil
 }
 
 // humanDate returns a nicely formatted string representation of a time.Time object.
