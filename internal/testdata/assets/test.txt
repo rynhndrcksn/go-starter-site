@@ -1,0 +1,3 @@
+Fast and simple code,
+Gophers build with quiet strength,
+Concurrency flows.
