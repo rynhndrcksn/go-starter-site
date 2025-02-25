@@ -22,8 +22,8 @@ Change the module name from `github.com/rynhndrcksn/go-starter-site` to match yo
 
 In an effort to keep third party dependencies to a minimum, only the following ones have been added:
 
-1. https://github.com/alexedwards/scs/pgxstore | Store sessions in Postgres
-2. https://github.com/alexedwards/scs | Session management
+1. https://github.com/alexedwards/scs | Session management
+2. https://github.com/alexedwards/scs/pgxstore | Store sessions in Postgres
 3. https://github.com/jackc/pgx | PostgreSQL driver
 4. https://github.com/julienschmidt/httprouter | Http router
 
