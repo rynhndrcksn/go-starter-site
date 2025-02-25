@@ -30,11 +30,12 @@ var functions = template.FuncMap{
 	"props":         props,
 }
 
-// hashAssetPath takes an asset path, computes the has for the asset, appends it to the asset name, and returns it.
+// hashAssetPath takes an asset path, computes the hash for the asset, appends it to the asset name, and returns it.
 // This acts as a way to enable caching the assets long term, but if they change, the cache can be bypassed.
 // The path passed in must start with a "/", and is expected to be used in a similar setup to this project.
 // This works by appending a ?v=<hash> to the end of the file, so it isn't incredibly robust for advanced needs.
-// This is heavily inspired by https://github.com/c9845/hashfs
+// However, the <hash> is 32 characters long, so it's sufficient for most needs.
+// Partially inspired by https://github.com/c9845/hashfs
 func hashAssetPath(originalPath string) (string, error) {
 	if len(strings.TrimSpace(originalPath)) == 0 {
 		return "", errHashAssetPathIsEmpty

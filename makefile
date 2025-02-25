@@ -72,13 +72,13 @@ audit:
 ## tidy: format all .go files and tidy module dependencies
 .PHONY: tidy
 tidy:
-	@echo 'Formatting .go files...'
-	@go fmt ./...
 	@echo 'Tidying module dependencies...'
 	@go mod tidy
 	@echo 'Verifying and vendoring module dependencies...'
 	@go mod verify
 	@go mod vendor
+	@echo 'Formatting .go files...'
+	@go fmt ./...
 
 ## up: update all dependencies in go.mod and runs make tidy afterwards
 .PHONY: up
