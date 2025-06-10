@@ -111,13 +111,13 @@ test/web:
 .PHONY: docker/build/web
 docker/build/web:
 	@echo 'Building docker container for cmd/web...'
-	sudo docker build --no-cache -t ${APP_DOCKER_NAME} . && sudo docker image prune -f
+	docker build --no-cache -t ${APP_DOCKER_NAME} . && docker image prune -f
 
 ## docker/run/web: run the dockerized cmd/web application
 .PHONY: docker/run/web
-docker/run/web: docker/build/web
+docker/run/web:
 	@echo 'Starting docker container for cmd/web...'
-	sudo docker run -p 4000:4000 --network="host" --env-file=".env" ${APP_DOCKER_NAME}
+	docker run -p 4000:4000 --network="host" --env-file=".env" ${APP_DOCKER_NAME}
 
 # ==================================================================================== #
 # WEB
