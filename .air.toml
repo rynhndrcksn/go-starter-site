@@ -4,7 +4,7 @@ tmp_dir = "tmp"
 
 [build]
 args_bin = []
-bin = ";export $(grep -v '^#' .envrc | xargs); ./tmp/host_web"
+bin = ";export $(grep -v '^#' .env | xargs); ./tmp/host_web"
 cmd = "go build -o ./tmp/host_web ./cmd/web/"
 delay = 500
 exclude_dir = ["assets", "tmp", "vendor", "testdata"]

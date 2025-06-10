@@ -2,8 +2,8 @@
 # Using a @ will suppress "make" from echoing out the command when it's ran.
 # Using .PHONE: <command> tells "make" that the name is something that should be executed, and not a file.
 
-# Include variables from the .envrc file
-include .envrc
+# Include variables from the .env file
+include .env
 
 # ==================================================================================== #
 # HELPERS
@@ -117,7 +117,7 @@ docker/build/web:
 .PHONY: docker/run/web
 docker/run/web: docker/build/web
 	@echo 'Starting docker container for cmd/web...'
-	sudo docker run -p 4000:4000 --network="host" --env-file=".envrc" ${APP_DOCKER_NAME}
+	sudo docker run -p 4000:4000 --network="host" --env-file=".env" ${APP_DOCKER_NAME}
 
 # ==================================================================================== #
 # WEB
