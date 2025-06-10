@@ -1,0 +1,51 @@
+# Git specific
+.git
+.gitignore
+.gitattributes
+
+# IDE and editor specific
+.idea
+.vscode
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local build artifacts
+/bin
+/dist
+/build
+*.exe
+*.out
+
+# Go specific
+vendor/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Local environment files (should not be in the image)
+.env
+.env.*
+!.env.example
+
+# Test files (Go build usually excludes them, but good to be explicit for build context)
+*_test.go
+
+# Markdown files (unless specifically needed in the image)
+*.md
+
+# Docker files themselves (not needed inside the context)
+Dockerfile
+.dockerignore
+
+# Other common temporary or sensitive files
+*.tmp
+*.bak
+*.old
