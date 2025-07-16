@@ -16,7 +16,7 @@ While on desktop, click the "Use this template" button located near the top righ
 Change the module name from `github.com/rynhndrcksn/go-starter-site` to match your repository.
 
 > [!NOTE]
-> Don't forget to update all the import paths throughout the project as well!
+> Remember to update all the import paths throughout the project as well!
 
 ## Dependencies
 
@@ -25,7 +25,6 @@ In an effort to keep third party dependencies to a minimum, only the following o
 1. https://github.com/alexedwards/scs | Session management
 2. https://github.com/alexedwards/scs/pgxstore | Store sessions in Postgres
 3. https://github.com/jackc/pgx | PostgreSQL driver
-4. https://github.com/julienschmidt/httprouter | Http router
 
 There are some development related dependencies that I recommend installing to your local machine:
 
