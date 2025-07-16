@@ -27,7 +27,7 @@ dev-deps:
 # Confirm that the user wants to run the make command.
 .PHONY: confirm
 confirm:
-	@echo -n 'Are you sure? [y/N] ' && read ans && [ $${ans:-N} = y ]
+	@echo 'Are you sure? [y/N] ' && read ans && [ $${ans:-N} = y ]
 
 # ==================================================================================== #
 # DATABASE
@@ -68,7 +68,7 @@ db/mig/up: confirm
 
 ## audit: run quality control checks
 .PHONY: audit
-audit:
+audit: tidy
 	@echo 'Checking module dependencies'
 	@go mod tidy -diff
 	@go mod verify
