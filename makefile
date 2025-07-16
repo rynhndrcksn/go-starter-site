@@ -15,6 +15,15 @@ help:
 	@echo 'Usage:'
 	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' |  sed -e 's/^/ /'
 
+## dev-deps: install this projects dev related dependencies
+.PHONY: dev-deps
+dev-deps:
+	@echo 'Installing dev dependencies...'
+	@go install github.com/air-verse/air@latest
+	@go install honnef.co/go/tools/cmd/staticcheck@latest
+	@go install golang.org/x/vuln/cmd/govulncheck@latest
+	@go install github.com/pressly/goose/v3/cmd/goose@latest
+
 # Confirm that the user wants to run the make command.
 .PHONY: confirm
 confirm:
@@ -66,6 +75,8 @@ audit:
 	@echo 'Vetting code...'
 	@go vet ./...
 	@staticcheck ./...
+	@echo 'Running govulncheck...'
+	@govulncheck ./...
 	@echo 'Running tests...'
 	@go test -race -vet=off ./...
 
