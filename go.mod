@@ -6,7 +6,6 @@ require (
 	github.com/alexedwards/scs/pgxstore v0.0.0-20250417082927-ab20b3feb5e9
 	github.com/alexedwards/scs/v2 v2.8.0
 	github.com/jackc/pgx/v5 v5.7.5
-	github.com/julienschmidt/httprouter v1.3.0
 )
 
 require (
